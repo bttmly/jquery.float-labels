@@ -1,50 +1,92 @@
 do ( $ = jQuery ) ->
 
-  $.fn.floatLabels = ( options ) ->
-        
-    options ?= {}
+  # pattern based on https://gist.github.com/chikamichi/5417680
+  $.fn.floatLabels = ( method ) ->
     
-    defaults =
-      floatOn    : "focus"
-      activeClass : "label-active"
-      filledClass : "label-filled"
-      
-    settings = $.extend( {}, defaults, options )
-    
-    hasVal = (el) ->
-        if el.value.length is 0 then return false else return true
+    if methods[method]
+      methods[method].apply( this, Array::slice.call( arguments, 1) )
 
-    this.each ( i, input ) ->
-      $input = $( input )
-      $label = if input.id then $("[for='#{input.id}']") else $("[for='#{input.name}']")
+    # floatLabels.make is the default method
+    else if $.isPlainObject( method ) or not methods[method]
+      methods.make.apply( this, arguments )
 
-      if settings.floatOn is "focus"
-        
-        $input
-        .bind "focus", ->
-            $label.addClass( settings.activeClass )
-        .bind "blur", ->
-          $label.removeClass( settings.activeClass )
-          if hasVal(this)
-            $label.addClass( settings.filledClass )
-          else
-            $label.removeClass( settings.filledClass )
-        .trigger( "blur" )
+    else
+      $.error( "Method #{method} does not exist on jQuery.floatLabels")
+
+  settings = {}
+
+  methods =
+
+    make : ( options ) ->
+
+      options or= {}
+
+      defaults =
+        floatOn     : "focus"
+        activeClass : "float-label-active"
+        filledClass : "float-label-filled"
+        inputClass  : "float-label-input"
+
+      settings = $.extend( {}, defaults, ( options or {} ) )
       
-      else if settings.floatOn is "entry"
+      hasVal = ( el ) ->
+          if el.value.length is 0 then return false else return true
+
+      this.addClass( defaults.inputClass )
+
+      this.each ( i, input ) ->
+        $input = $( input )
+        $label = if input.id then $("[for='#{input.id}']") else $("[for='#{input.name}']")
+
+        switch settings.floatOn
+
+          when "focus"
+            $input
+            .bind "focus.floatLabel", ->
+                $label.addClass( settings.activeClass )
+            .bind "blur.floatLabel", ->
+              $label.removeClass( settings.activeClass )
+              if hasVal( this )
+                $label.addClass( settings.filledClass )
+              else
+                $label.removeClass( settings.filledClass )
+            .trigger( "blur.floatLabel" )
         
-        $input
-        .bind "focus", ->
-          if hasVal(this)
-            $label.addClass( settings.activeClass )
-        .bind "blur", ->
-          if hasVal(this)
-            $label.addClass( settings.filledClass ).removeClass( settings.activeClass )
-        .bind "keydown", ->
-          if hasVal(this)
-            $label.addClass( settings.activeClass )
+          when "entry"
+            $input
+            .bind "focus.floatLabel", ->
+              if hasVal( this )
+                $label.addClass( settings.activeClass )
+            .bind "blur.floatLabel", ->
+              if hasVal( this )
+                $label.addClass( settings.filledClass ).removeClass( settings.activeClass )
+            .bind "keydown.floatLabel", ->
+              if hasVal( this )
+                $label.addClass( settings.activeClass )
+              else
+                $label.removeClass( "#{settings.activeClass} #{settingsfilledClass}" )
+            .trigger( "blur.floatLabel" )
+
           else
-            $label.removeClass( settings.activeClass + ' ' + settings.filledClass )
-        .trigger( "blur" )
-      
+            console.warn "Invalid floatOn option: #{settings.floatOn}"
+        
+        return this
+
+    destroy : ->
+
+      if settings.inputClass
+        this.removeClass( settings.inputClass )
+
+      this.each (i, input) ->
+
+        $input = $( input )
+        $label = if input.id then $("[for='#{input.id}']") else $("[for='#{input.name}']")
+
+        $label.removeClass( "#{settings.activeClass} #{settingsfilledClass}" )
+
+        $input
+        .unbind( "focus.floatLabel" )
+        .unbind( "blur.floatLabel" )
+        .unbind( "keydown.floatLabel" )
+
       return this
