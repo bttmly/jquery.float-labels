@@ -1,14 +1,18 @@
+
+/* need to have a relatively positioned element wrapping each input and label.float-label */
 .float-label-wrapper {
-  position:relative;
+  position: relative; /* crucial */
   margin-top: 1rem;
 }
 
+/* styles that apply to all float-labels */
+/* refactor? */
 .float-label-outer, 
 .float-label-inner {
   position:absolute;
   float:left;
-  top: .375rem;
-  left: .3125rem;
+  top: .375rem; /* positioning is important */
+  left: .3125rem; /* ditto */
   color: #bbb;
   -webkit-transition: font-size .1s linear, color .1s linear;
   -moz-transition: font-size .1s linear, color .1s linear;
@@ -17,31 +21,37 @@
   transition: font-size .1s linear, color .1s linear;
 }
 
+/* replace these with any styles you want for active and filled labels */
 .float-label-filled,
 .float-label-active {
   font-size: .75rem;
   font-weight: bold;
 }
 
+/* filled label styles - has content but not focused */
 .float-label-filled {
   color: #bbb;
 }
 
+/* active label styles - focused but depends on behavior choice */
 .float-label-active {
   color: rgba(68,129,196,.75);
 }
 
+/* specific to float labels presented outside of the target input */
 .float-label-outer.float-label-filled,
 .float-label-outer.float-label-active {
   top: -.125rem;
   left: 0;
 }
 
+/* specific to labels for which float labels are presented inside of the target input */
 .float-label-inner.float-label-filled + input,
 .float-label-inner.float-label-active + input {
   padding-top: 1.25rem
 }
 
+/* specific to labels for which float labels are presented outside of the target input */
 .float-label-outer.float-label-filled + input,
 .float-label-outer.float-label-active + input {
   margin-top: 1rem
