@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+  <head>
+    <title>Float Labels jQuery Plugin</title>
+    <link rel="stylesheet" href="float-labels.css">
+    <link rel="stylesheet" href="demo.css">
+  </head>
+  <body>
+
+    <div class="input-holder" id="first-name-input">
+      <label class="outer-float-label" for="fl-1">First Name</label>
+      <input type="text" name="fl-1" required />
+    </div>
+
+    <div class="input-holder" id="last-name-input">
+      <label class="outer-float-label" for="fl-2">Last Name</label>
+      <input type="text" id="fl-2" required />
+    </div>
+
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="jquery.float-labels.js"></script>
+    <script>
+      $(document).ready(function() {
+        $("input").floatLabel()
+      })
+    </script>
+
+  </body>

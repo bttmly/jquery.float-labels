@@ -1,0 +1,48 @@
+.float-label-wrapper {
+  position:relative;
+  margin-top: 1rem;
+}
+
+.float-label-outer, 
+.float-label-inner {
+  position:absolute;
+  float:left;
+  top: .375rem;
+  left: .3125rem;
+  color: #bbb;
+  -webkit-transition: font-size .1s linear, color .1s linear;
+  -moz-transition: font-size .1s linear, color .1s linear;
+  -ms-transition: font-size .1s linear, color .1s linear;
+  -o-transition: font-size .1s linear, color .1s linear;
+  transition: font-size .1s linear, color .1s linear;
+}
+
+.float-label-filled,
+.float-label-active {
+  font-size: .75rem;
+  font-weight: bold;
+}
+
+.float-label-filled {
+  color: #bbb;
+}
+
+.float-label-active {
+  color: rgba(68,129,196,.75);
+}
+
+.float-label-outer.float-label-filled,
+.float-label-outer.float-label-active {
+  top: -.125rem;
+  left: 0;
+}
+
+.float-label-inner.float-label-filled + input,
+.float-label-inner.float-label-active + input {
+  padding-top: 1.25rem
+}
+
+.float-label-outer.float-label-filled + input,
+.float-label-outer.float-label-active + input {
+  margin-top: 1rem
+}
