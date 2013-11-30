@@ -10,36 +10,41 @@ do ( $ = jQuery ) ->
       filledClass : "label-filled"
       
     settings = $.extend( {}, defaults, options )
-        
+    
+    hasVal = (el) ->
+        if el.value.length is 0 then return false else return true
+
     this.each ( i, input ) ->
       $input = $( input )
       $label = if input.id then $("[for='#{input.id}']") else $("[for='#{input.name}']")
-        
+
       if settings.floatOn is "focus"
         
-        $input.bind( "focus", ->
+        $input
+        .bind "focus", ->
             $label.addClass( settings.activeClass )
-        ).bind( "blur", ->
+        .bind "blur", ->
           $label.removeClass( settings.activeClass )
-          if input.value.length > 0
+          if hasVal(this)
             $label.addClass( settings.filledClass )
           else
             $label.removeClass( settings.filledClass )
-        ).trigger( "blur" )
+        .trigger( "blur" )
       
       else if settings.floatOn is "entry"
         
-        $input.bind( "focus", ->
-          if this.value.length > 0
+        $input
+        .bind "focus", ->
+          if hasVal(this)
             $label.addClass( settings.activeClass )
-        ).bind( "blur", ->
-          if this.value.length > 0
+        .bind "blur", ->
+          if hasVal(this)
             $label.addClass( settings.filledClass ).removeClass( settings.activeClass )
-        ).bind( "keyup", ->
-          if this.value.length > 0
+        .bind "keydown", ->
+          if hasVal(this)
             $label.addClass( settings.activeClass )
           else
             $label.removeClass( settings.activeClass + ' ' + settings.filledClass )
-        ).trigger( "blur" )
+        .trigger( "blur" )
       
       return this
